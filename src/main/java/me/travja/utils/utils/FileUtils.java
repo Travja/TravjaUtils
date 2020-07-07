@@ -8,6 +8,12 @@ import java.util.List;
 
 public class FileUtils {
 
+    /**
+     * Takes a directory and returns a List of files in that directory
+     *
+     * @param directory The directory to search
+     * @return {@link List<File>}
+     */
     public static List<File> getFiles(String directory) {
         File dir = new File(directory);
         if (!dir.isDirectory())
@@ -17,6 +23,12 @@ public class FileUtils {
         }
     }
 
+    /**
+     * Creates a {@link FileReader} for the given file at the specified path
+     *
+     * @param name The path to read
+     * @return {@link FileReader}
+     */
     public static FileReader readFile(String name) {
         return readFile(new File(name));
     }
@@ -80,6 +92,12 @@ public class FileUtils {
         }
     }
 
+    /**
+     * Reads the file fully, creates a FileReader and closes it. Returns a String containing all the text in the file.
+     *
+     * @param name The path to the file to read
+     * @return String representing the file contents.
+     */
     public static String readFileFully(String name) {
         File file = new File(name);
         return readFileFully(file);
@@ -128,79 +146,33 @@ public class FileUtils {
         return null;
     }
 
-
-    //Sample methods with commented out sections for reading/writing objects to the file.
-    public static boolean save(int slot) {
-        try {
-            File saves = new File("saves");
-            saves.mkdir();
-            FileOutputStream writer = new FileOutputStream("saves/slot" + slot + ".spacejam");
-            ObjectOutputStream o = new ObjectOutputStream(writer);
-//            o.writeObject(getQuadrants());
-//            o.writeObject(getPlayer());
-//            o.writeObject(yogurtLoc);
-//            o.writeObject(ringLoc);
-//            o.writeObject(spaceballLoc);
-//            o.writeObject(previousTile);
-//            o.writeObject(StoryEvents.START);
-//            o.writeObject(StoryEvents.ENTER_LONE_STAR);
-//            o.writeObject(StoryEvents.FIND_LONE_STAR);
-//            o.writeObject(StoryEvents.FIND_YOGURT);
-//            o.writeObject(StoryEvents.COMB_DESERT);
-////            o.writeObject(StoryEvents.SHREK_FIGHT);
-//            o.writeObject(StoryEvents.DISTRACT_GUARD);
-//            o.writeObject(StoryEvents.GIVE_YOGURT_LOC);
-//            o.writeObject(StoryEvents.GIVE_YOGURT_QUADRANT);
-//            o.writeObject(StoryEvents.FINAL_FIGHT);
-//            o.write(moves);
-//            o.write(StoryEvents.storyStep);
-            o.close();
-            writer.close();
-            return true;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    public static boolean load(int slot) {
-        try {
-            File saves = new File("saves");
-            saves.mkdir();
-            FileInputStream in = new FileInputStream("saves/slot" + slot + ".spacejam");
-            ObjectInputStream o = new ObjectInputStream(in);
-//            quadrants = (Map[]) o.readObject();
-//            player = (Player) o.readObject();
-//            yogurtLoc = (Location) o.readObject();
-//            ringLoc = (Location) o.readObject();
-//            spaceballLoc = (Location) o.readObject();
-//            previousTile = (Tile) o.readObject();
-//            StoryEvents.START = (Event) o.readObject();
-//            StoryEvents.ENTER_LONE_STAR = (Event) o.readObject();
-//            StoryEvents.FIND_LONE_STAR = (Event) o.readObject();
-//            StoryEvents.FIND_YOGURT = (Event) o.readObject();
-//            StoryEvents.COMB_DESERT = (Event) o.readObject();
-////            StoryEvents.SHREK_FIGHT = (Event) o.readObject();
-//            StoryEvents.DISTRACT_GUARD = (Event) o.readObject();
-//            StoryEvents.GIVE_YOGURT_LOC = (Event) o.readObject();
-//            StoryEvents.GIVE_YOGURT_QUADRANT = (Event) o.readObject();
-//            StoryEvents.FINAL_FIGHT = (Event) o.readObject();
-//            story = new StoryController();
-//            moves = o.read();
-//            StoryEvents.storyStep = o.read();
-            o.close();
-            in.close();
-//            win = false;
-            return true;
-        } catch (IOException /*| ClassNotFoundException*/ e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
+    /**
+     * Writes an object to the given file
+     *
+     * @param obj      The object to write
+     * @param filePath The file path to write to
+     */
     public static void writeObjectToFile(Object obj, String filePath) {
         try {
             ObjectOutputStream objectOut = new ObjectOutputStream(new FileOutputStream(filePath));
+            objectOut.writeObject(obj);
+            objectOut.close();
+            System.out.println("Object successfully written to file");
+        } catch (IOException e) {
+            System.out.println("Could not write object to file.");
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Writes an object to the given file
+     *
+     * @param obj  The object to write
+     * @param file The file to write to
+     */
+    public static void writeObjectToFile(Object obj, File file) {
+        try {
+            ObjectOutputStream objectOut = new ObjectOutputStream(new FileOutputStream(file));
             objectOut.writeObject(obj);
             objectOut.close();
             System.out.println("Object successfully written to file");

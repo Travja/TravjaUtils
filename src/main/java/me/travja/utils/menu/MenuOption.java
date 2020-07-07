@@ -15,9 +15,15 @@ public class MenuOption {
         return action;
     }
 
+    /**
+     * When this option is selected in a menu, this action is executed.
+     *
+     * @param action The {@link MenuAction} to run
+     */
     public void setAction(MenuAction action) {
         if (action == null)
-            action = () -> {};
+            action = () -> {
+            };
         this.action = action;
     }
 
@@ -25,6 +31,11 @@ public class MenuOption {
         return option;
     }
 
+    /**
+     * Set the text to be associated with this MenuOption
+     *
+     * @param option
+     */
     public void setOption(String option) {
         this.option = option;
     }

@@ -51,6 +51,12 @@ public class Menu {
     }
 
     //Gets the menu going and prompts for input, then tells the input to run!
+
+    /**
+     * Display the menu to the user.
+     *
+     * @param loop Should this menu loop until quit is selected or display just once?
+     */
     public void open(boolean loop) {
         int choice;
         do {
@@ -101,19 +107,40 @@ public class Menu {
         return appendIfNotNull(str, sb, "");
     }
 
+    /**
+     * If this menu is a sub-menu, get the parent menu
+     *
+     * @return {@link Menu} or null
+     */
     public Menu getParentMenu() {
         return parentMenu;
     }
 
+    /**
+     * Make this menu a child-menu of parentMenu
+     *
+     * @param parentMenu The parent menu
+     * @return The current Menu object
+     */
     public Menu setParentMenu(Menu parentMenu) {
         this.parentMenu = parentMenu;
         return this;
     }
 
+    /**
+     * Get the header string of the menu
+     *
+     * @return String
+     */
     public String getHeader() {
         return header;
     }
 
+    /**
+     * Set the menu header text
+     *
+     * @param header The text to be displayed before the prompt and options
+     */
     public void setHeader(String header) {
         this.header = header;
     }
@@ -130,6 +157,12 @@ public class Menu {
         return footer;
     }
 
+    /**
+     * Set the text to be displayed when prompting the user for input.
+     * This should typically end in ': ' but may end with '\n' to allow the user to enter text on a new line.
+     *
+     * @param footer Text to display when asking for input
+     */
     public void setFooter(String footer) {
         this.footer = footer;
     }
@@ -145,6 +178,12 @@ public class Menu {
         return null;
     }
 
+    /**
+     * Manually add a {@link MenuOption} to the Menu
+     *
+     * @param option The option to add
+     * @return The current Menu
+     */
     public Menu addOption(MenuOption option) {
         if (option != null)
             options.add(option);
@@ -183,6 +222,12 @@ public class Menu {
         return perpetual;
     }
 
+    /**
+     * Add a {@link MenuAction} that should be run <i>each</i> time the user makes a choice.
+     *
+     * @param perpetual The {@link MenuAction} to perform
+     * @return The current Menu
+     */
     public Menu setPerpetual(MenuAction perpetual) {
         this.perpetual = perpetual;
         return this;
@@ -192,6 +237,12 @@ public class Menu {
         return getParentMenu().equals(this);
     }
 
+    /**
+     * Makes this menu the main menu. This must be set for the main menu, but need not be set for children
+     *
+     * @param main boolean
+     * @return The current Menu
+     */
     public Menu setMainMenu(boolean main) {
         if (main)
             setParentMenu(this);
@@ -204,6 +255,12 @@ public class Menu {
         return direction;
     }
 
+    /**
+     * Sets the direction the Menu should be displayed, HORIZONTAL or VERTICAL
+     *
+     * @param direction {@link MenuDirection}
+     * @return The current Menu
+     */
     public Menu setDirection(MenuDirection direction) {
         this.direction = direction;
         return this;

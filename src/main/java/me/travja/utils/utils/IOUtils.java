@@ -14,6 +14,11 @@ public class IOUtils {
     private static Robot robot;
     private static HashMap<Character, Integer> keyMap = new HashMap<>();
 
+    /**
+     * Read in user input from the command line
+     *
+     * @return {@link String} containing the user input. Can be an empty String
+     */
     public static String read() {
         String ret = null;
         try {
@@ -228,6 +233,12 @@ public class IOUtils {
         keyMap.put('>', KeyEvent.VK_PERIOD);
     }
 
+    /**
+     * Uses {@link Robot} to print text that is editable by the user.
+     * Text may not be multi-line.
+     *
+     * @param text The text to show to the user
+     */
     public static void printEditable(String text) {
         initRobot();
 
