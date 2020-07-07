@@ -1,4 +1,4 @@
-package utils.menu;
+package me.travja.utils.menu;
 
 public enum MenuDirection {
     VERTICAL,

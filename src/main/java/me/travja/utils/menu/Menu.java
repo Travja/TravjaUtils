@@ -1,6 +1,6 @@
-package utils.menu;
+package me.travja.utils.menu;
 
-import utils.utils.IOUtils;
+import me.travja.utils.utils.IOUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;

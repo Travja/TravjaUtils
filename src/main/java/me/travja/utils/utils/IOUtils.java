@@ -1,4 +1,4 @@
-package utils.utils;
+package me.travja.utils.utils;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
