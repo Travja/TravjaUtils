@@ -12,7 +12,7 @@ public class FileUtils {
      * Takes a directory and returns a List of files in that directory
      *
      * @param directory The directory to search
-     * @return {@link List<File>}
+     * @return {@link List}
      */
     public static List<File> getFiles(String directory) {
         File dir = new File(directory);
