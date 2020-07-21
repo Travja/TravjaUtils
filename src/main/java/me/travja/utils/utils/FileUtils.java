@@ -1,12 +1,31 @@
 package me.travja.utils.utils;
 
 import java.io.*;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 public class FileUtils {
+
+    /**
+     * Attempts to get the the resource included in the compiled jar. Returns null if none is found.
+     *
+     * @param filename The file to search for
+     * @return A {@link File} or null
+     */
+    public File getResource(String filename) {
+        URL url = this.getClass().getClassLoader().getResource(filename);
+        try {
+            return new File(url.toURI());
+        } catch (URISyntaxException e) {
+            System.out.println("Could not find resource '" + filename + "'");
+            e.printStackTrace();
+            return null;
+        }
+    }
 
     /**
      * Takes a directory and returns a List of files in that directory
