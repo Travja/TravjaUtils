@@ -16,8 +16,8 @@ public class FileUtils {
      * @param filename The file to search for
      * @return A {@link File} or null
      */
-    public File getResource(String filename) {
-        URL url = this.getClass().getClassLoader().getResource(filename);
+    public static File getResource(Class clazz, String filename) {
+        URL url = clazz.getClassLoader().getResource(filename);
         try {
             return new File(url.toURI());
         } catch (URISyntaxException e) {
