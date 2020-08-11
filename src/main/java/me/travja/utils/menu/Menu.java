@@ -16,6 +16,7 @@ public class Menu {
     private String footer;
     private MenuAction perpetual;
     private MenuDirection direction = MenuDirection.VERTICAL;
+    private boolean allowExit = true;
 
     //Give our constructors with various overloads so scaling is simple
     public Menu() {
@@ -63,7 +64,7 @@ public class Menu {
             lastMenu = this; //This way, when we fall-through, the choice is already set to 0, but the last menu will be different, keeping it alive.
             System.out.println();
             //Display the menu to the user and ask for input, then run their choice.
-            choice = IOUtils.promptForInt(buildMessage(), 0, getOptions().size());
+            choice = IOUtils.promptForInt(buildMessage(), allowExit ? 0 : 1, getOptions().size());
             if (choice > 0)
                 runChoice(choice); //Fall-through (dropping menus) happens here in the case of a choice opening another menu.
         } while (loop && (choice != 0 || (!this.equals(lastMenu) && choice == 0)));
@@ -92,7 +93,8 @@ public class Menu {
         String split = getDirection() == MenuDirection.VERTICAL ? "\n" : "\t";
         for (int i = 0; i < getOptions().size(); i++) //Build our options and number them
             sb.append(String.format(split + "%d) %s", i + 1, getOption(i)));
-        sb.append((getParentMenu() == null || isMainMenu()) ? split + split + "0) Exit\n" : split + split + "0) Back\n");//Add our default Exit/Back options. Back if the menu is a submenu.
+        if (allowExit)
+            sb.append((getParentMenu() == null || isMainMenu()) ? split + split + "0) Exit\n" : split + split + "0) Back\n");//Add our default Exit/Back options. Back if the menu is a submenu.
         appendIfNotNull(getFooter(), sb, " ");//Add our footer
         return sb.toString();
     }
@@ -263,6 +265,17 @@ public class Menu {
      */
     public Menu setDirection(MenuDirection direction) {
         this.direction = direction;
+        return this;
+    }
+
+    /**
+     * Sets whether the menu will show an 'Exit' or 'Back' option. True by default
+     *
+     * @param allowExit boolean
+     * @return The {@link Menu} object
+     */
+    public Menu allowExit(boolean allowExit) {
+        this.allowExit = allowExit;
         return this;
     }
 }
