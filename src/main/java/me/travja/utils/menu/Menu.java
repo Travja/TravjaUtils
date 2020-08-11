@@ -95,6 +95,8 @@ public class Menu {
             sb.append(String.format(split + "%d) %s", i + 1, getOption(i)));
         if (allowExit)
             sb.append((getParentMenu() == null || isMainMenu()) ? split + split + "0) Exit\n" : split + split + "0) Back\n");//Add our default Exit/Back options. Back if the menu is a submenu.
+        else
+            sb.append("\n");
         appendIfNotNull(getFooter(), sb, " ");//Add our footer
         return sb.toString();
     }
