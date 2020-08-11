@@ -17,6 +17,9 @@ public class Menu {
     private MenuAction perpetual;
     private MenuDirection direction = MenuDirection.VERTICAL;
     private boolean allowExit = true;
+    private boolean looping = false;
+
+    private int openedTimes = 0;
 
     //Give our constructors with various overloads so scaling is simple
     public Menu() {
@@ -55,10 +58,19 @@ public class Menu {
 
     /**
      * Display the menu to the user.
+     */
+    public void open() {
+        open(looping);
+    }
+
+    /**
+     * Display the menu to the user.
      *
      * @param loop Should this menu loop until quit is selected or display just once?
      */
     public void open(boolean loop) {
+        looping = loop;
+        openedTimes++;
         int choice;
         do {
             lastMenu = this; //This way, when we fall-through, the choice is already set to 0, but the last menu will be different, keeping it alive.
@@ -67,23 +79,33 @@ public class Menu {
             choice = IOUtils.promptForInt(buildMessage(), allowExit ? 0 : 1, getOptions().size());
             if (choice > 0)
                 runChoice(choice); //Fall-through (dropping menus) happens here in the case of a choice opening another menu.
-        } while (loop && (choice != 0 || (!this.equals(lastMenu) && choice == 0)));
+        } while (looping && (choice != 0 || (!this.equals(lastMenu) && choice == 0)));
         //The loop should run if....
         // *The user hasn't selected 0
         // *We're dropping menus, and it's not from this menu
+
+        //Don't open the parent menu if it's in a loop. It'll open automatically.
+        if (choice == 0 && getParentMenu() != null && !getParentMenu().isLooping()) {
+            getParentMenu().open();
+        }
     }
 
     private void runChoice(int choice) {
         MenuAction action = getOptions().get(choice - 1).getAction();
         if (action != null) {
             action.use();
-            if (getPerpetual() != null) //If we have a perpetual action after each selection, run it.
+            if (openedTimes == 1 && getPerpetual() != null) //If we have a perpetual action after each selection, run it.
                 getPerpetual().use();
         }
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
+
+        if (openedTimes == 1) {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+            }
         }
+
+        openedTimes--;
     }
 
     private String buildMessage() {
@@ -279,5 +301,14 @@ public class Menu {
     public Menu allowExit(boolean allowExit) {
         this.allowExit = allowExit;
         return this;
+    }
+
+    public Menu setLooping(boolean loop) {
+        this.looping = loop;
+        return this;
+    }
+
+    public boolean isLooping() {
+        return this.looping;
     }
 }
