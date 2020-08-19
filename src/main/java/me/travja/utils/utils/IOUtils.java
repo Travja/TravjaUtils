@@ -45,6 +45,9 @@ public class IOUtils {
             e.printStackTrace();
         }
 
+        if ((ret == null || ret.trim().isEmpty()) && System.console() == null)
+            throw new EOFException("There is no attached console and it appears that our input has reached the end of stream.");
+
         return ret;
     }
 
