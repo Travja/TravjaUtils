@@ -14,6 +14,14 @@ public class IOUtils {
     private static Robot robot;
     private static HashMap<Character, Integer> keyMap = new HashMap<>();
 
+		private static BufferedReader reader;
+
+		private static BufferedReader getReader() {
+			if (reader == null)
+				reader = new BufferedReader(new InputStreamReader(System.in));
+			return reader;
+		}
+
     /**
      * Read in user input from the command line
      *
@@ -22,8 +30,7 @@ public class IOUtils {
     public static String read() {
         String ret = null;
         try {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-            ret = reader.readLine();
+            ret = getReader().readLine();
         } catch (IOException e) {
             e.printStackTrace();
         }
