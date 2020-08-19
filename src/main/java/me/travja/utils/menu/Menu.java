@@ -2,6 +2,7 @@ package me.travja.utils.menu;
 
 import me.travja.utils.utils.IOUtils;
 
+import java.io.EOFException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -72,21 +73,26 @@ public class Menu {
         looping = loop;
         openedTimes++;
         int choice;
-        do {
-            lastMenu = this; //This way, when we fall-through, the choice is already set to 0, but the last menu will be different, keeping it alive.
-            System.out.println();
-            //Display the menu to the user and ask for input, then run their choice.
-            choice = IOUtils.promptForInt(buildMessage(), allowExit ? 0 : 1, getOptions().size());
-            if (choice > 0)
-                runChoice(choice); //Fall-through (dropping menus) happens here in the case of a choice opening another menu.
-        } while (looping && (choice != 0 || (!this.equals(lastMenu) && choice == 0)));
-        //The loop should run if....
-        // *The user hasn't selected 0
-        // *We're dropping menus, and it's not from this menu
+        try {
+            do {
+                lastMenu = this; //This way, when we fall-through, the choice is already set to 0, but the last menu will be different, keeping it alive.
+                System.out.println();
+                //Display the menu to the user and ask for input, then run their choice.
+                choice = IOUtils.promptForInt(buildMessage(), allowExit ? 0 : 1, getOptions().size());
+                if (choice > 0)
+                    runChoice(choice); //Fall-through (dropping menus) happens here in the case of a choice opening another menu.
+            } while (looping && (choice != 0 || (!this.equals(lastMenu) && choice == 0)));
+            //The loop should run if....
+            // *The user hasn't selected 0
+            // *We're dropping menus, and it's not from this menu
 
-        //Don't open the parent menu if it's in a loop. It'll open automatically.
-        if (choice == 0 && getParentMenu() != null && !getParentMenu().isLooping()) {
-            getParentMenu().open();
+            //Don't open the parent menu if it's in a loop. It'll open automatically.
+            if (choice == 0 && getParentMenu() != null && !getParentMenu().isLooping()) {
+                getParentMenu().open();
+            }
+        } catch (EOFException e) {
+            System.err.println("Stream was closed abruptly.");
+            e.printStackTrace();
         }
     }
 

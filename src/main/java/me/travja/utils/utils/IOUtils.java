@@ -3,6 +3,7 @@ package me.travja.utils.utils;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.io.BufferedReader;
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.text.ParseException;
@@ -14,23 +15,31 @@ public class IOUtils {
     private static Robot robot;
     private static HashMap<Character, Integer> keyMap = new HashMap<>();
 
-		private static BufferedReader reader;
+    private static BufferedReader reader;
 
-		private static BufferedReader getReader() {
-			if (reader == null)
-				reader = new BufferedReader(new InputStreamReader(System.in));
-			return reader;
-		}
+    private static BufferedReader getReader() throws EOFException {
+        try {
+            reader.ready();
+        } catch (IOException e) {
+            throw new EOFException("Input stream has been closed");
+        }
+
+        if (reader == null)
+            reader = new BufferedReader(new InputStreamReader(System.in));
+        return reader;
+    }
 
     /**
      * Read in user input from the command line
      *
      * @return {@link String} containing the user input. Can be an empty String
      */
-    public static String read() {
+    public static String read() throws EOFException {
         String ret = null;
         try {
             ret = getReader().readLine();
+        } catch (EOFException eof) {
+            throw eof;
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -46,7 +55,7 @@ public class IOUtils {
      * @param prompt What should we tell the user?
      * @return The string fro the user.
      */
-    public static String promptForString(String prompt) {
+    public static String promptForString(String prompt) throws EOFException {
         System.out.print(prompt.trim() + " ");
         String ret;
         String input = read();
@@ -66,7 +75,7 @@ public class IOUtils {
      * @param max    What is the maximum?
      * @return The parsed int from the user
      */
-    public static int promptForInt(String prompt, int min, int max) {
+    public static int promptForInt(String prompt, int min, int max) throws EOFException {
         int ret;
         try {
             ret = Integer.parseInt(promptForString(prompt));
@@ -88,7 +97,7 @@ public class IOUtils {
      * @param allowed A list of allowed values
      * @return The parsed int from the user
      */
-    public static int promptForInt(String prompt, ArrayList<Integer> allowed) {
+    public static int promptForInt(String prompt, ArrayList<Integer> allowed) throws EOFException {
         int ret;
         try {
             ret = Integer.parseInt(promptForString(prompt));
@@ -127,7 +136,7 @@ public class IOUtils {
      * @param max    The highest acceptable float
      * @return The parsed float value from the user
      */
-    public static float promptForFloat(String prompt, float min, float max) {
+    public static float promptForFloat(String prompt, float min, float max) throws EOFException {
         float ret;
         try {
             ret = Float.parseFloat(promptForString(prompt));
@@ -150,7 +159,7 @@ public class IOUtils {
      * @param prompt What should we tell the user?
      * @return The parsed Date object
      */
-    public static Date promptForDate(String prompt) {
+    public static Date promptForDate(String prompt) throws EOFException {
         SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
         boolean isValid = false;
         Date date = null;
@@ -203,7 +212,7 @@ public class IOUtils {
      * @param falseStr A list of acceptable inputs for false, separated by a '.'
      * @return Whether or not they entered true
      */
-    public static boolean promptForBoolean(String prompt, String trueStr, String falseStr) {
+    public static boolean promptForBoolean(String prompt, String trueStr, String falseStr) throws EOFException {
         ArrayList<String> yes = new ArrayList<>(Arrays.asList(trueStr.split("\\.")));
         ArrayList<String> no = new ArrayList<>(Arrays.asList(falseStr.split("\\.")));
 
