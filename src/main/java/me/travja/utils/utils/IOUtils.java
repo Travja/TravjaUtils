@@ -18,14 +18,15 @@ public class IOUtils {
     private static BufferedReader reader;
 
     private static BufferedReader getReader() throws EOFException {
+        if (reader == null)
+            reader = new BufferedReader(new InputStreamReader(System.in));
+
         try {
             reader.ready();
         } catch (IOException e) {
             throw new EOFException("Input stream has been closed");
         }
 
-        if (reader == null)
-            reader = new BufferedReader(new InputStreamReader(System.in));
         return reader;
     }
 
