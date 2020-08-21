@@ -1,8 +1,6 @@
 package me.travja.utils.utils;
 
 import java.io.*;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -14,17 +12,21 @@ public class FileUtils {
      * Attempts to get the the resource included in the compiled jar. Returns null if none is found.
      *
      * @param filename The file to search for
-     * @return A {@link File} or null
+     * @return A {@link TempFile} object with the text data of the file, or null
      */
-    public static File getResource(Class clazz, String filename) {
-        URL url = clazz.getClassLoader().getResource(filename);
-        try {
-            return new File(url.toURI());
-        } catch (URISyntaxException e) {
-            System.out.println("Could not find resource '" + filename + "'");
-            e.printStackTrace();
-            return null;
-        }
+    public static TempFile getResource(String filename) {
+        return new TempFile(FileUtils.class.getClassLoader().getResourceAsStream(filename));
+    }
+
+    /**
+     * Gets the resource as an {@link InputStream} or null<br>
+     * Ideal for getting audio files or other, non-text files.
+     *
+     * @param filename The file to search for
+     * @return An InputStream object or null
+     */
+    public static InputStream getResourceAsStream(String filename) {
+        return FileUtils.class.getClassLoader().getResourceAsStream(filename);
     }
 
     /**

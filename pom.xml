@@ -6,7 +6,7 @@
 
     <groupId>me.travja</groupId>
     <artifactId>TravjaUtils</artifactId>
-    <version>1.0.08-SNAPSHOT</version>
+    <version>1.0.09-SNAPSHOT</version>
 
     <build>
         <plugins>
