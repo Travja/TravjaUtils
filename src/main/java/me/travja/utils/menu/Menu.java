@@ -85,6 +85,7 @@ public class Menu {
             //The loop should run if....
             // *The user hasn't selected 0
             // *We're dropping menus, and it's not from this menu
+            openedTimes--;
 
             //Don't open the parent menu if it's in a loop. It'll open automatically.
             if (choice == 0 && getParentMenu() != null && !getParentMenu().isLooping()) {
@@ -110,8 +111,6 @@ public class Menu {
             } catch (InterruptedException e) {
             }
         }
-
-        openedTimes--;
     }
 
     private String buildMessage() {
