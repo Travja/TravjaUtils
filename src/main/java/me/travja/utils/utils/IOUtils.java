@@ -1,5 +1,8 @@
 package me.travja.utils.utils;
 
+import me.travja.utils.menu.EndAction;
+import me.travja.utils.menu.MenuAction;
+
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.io.BufferedReader;
@@ -17,15 +20,23 @@ public class IOUtils {
 
     private static BufferedReader reader;
 
-    private static BufferedReader getReader() throws EOFException {
+    private static int failed = 0;
+
+    private static EndAction endAction = null;
+
+    public static EndAction getEndAction() {
+        return endAction;
+    }
+
+    public static void setEndAction(EndAction endAction) {
+        IOUtils.endAction = endAction;
+    }
+
+    private static BufferedReader getReader() throws IOException {
         if (reader == null)
             reader = new BufferedReader(new InputStreamReader(System.in));
 
-        try {
-            reader.ready();
-        } catch (IOException e) {
-            throw new EOFException("Input stream has been closed");
-        }
+        reader.ready();
 
         return reader;
     }
@@ -39,14 +50,19 @@ public class IOUtils {
         String ret = null;
         try {
             ret = getReader().readLine();
-        } catch (EOFException eof) {
-            throw eof;
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        if ((ret == null || ret.trim().isEmpty()) && System.console() == null)
-            throw new EOFException("There is no attached console and it appears that our input has reached the end of stream.");
+        if ((ret == null || ret.trim().isEmpty()) && System.console() == null) {
+            failed++;
+            if (failed >= 5)
+                if (endAction != null)
+                    endAction.use();
+                else
+                    throw new EOFException("It appears that our input has reached the end of stream.");
+        } else
+            failed = 0;
 
         return ret;
     }

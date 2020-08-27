@@ -60,7 +60,7 @@ public class Menu {
     /**
      * Display the menu to the user.
      */
-    public void open() {
+    public void open() throws EOFException {
         open(looping);
     }
 
@@ -69,7 +69,7 @@ public class Menu {
      *
      * @param loop Should this menu loop until quit is selected or display just once?
      */
-    public void open(boolean loop) {
+    public void open(boolean loop) throws EOFException {
         looping = loop;
         openedTimes++;
         int choice;
@@ -92,12 +92,17 @@ public class Menu {
                 getParentMenu().open();
             }
         } catch (EOFException e) {
-            System.err.println("Stream was closed abruptly.");
-            e.printStackTrace();
+            if (IOUtils.getEndAction() != null) {
+                IOUtils.getEndAction().use();
+            } else {
+                System.err.println("Stream was closed abruptly. Backing out.");
+                throw e;
+            }
+
         }
     }
 
-    private void runChoice(int choice) {
+    private void runChoice(int choice) throws EOFException {
         MenuAction action = getOptions().get(choice - 1).getAction();
         if (action != null) {
             action.use();
