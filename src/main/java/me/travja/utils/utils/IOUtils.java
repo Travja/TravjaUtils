@@ -1,7 +1,6 @@
 package me.travja.utils.utils;
 
 import me.travja.utils.menu.EndAction;
-import me.travja.utils.menu.MenuAction;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -22,7 +21,10 @@ public class IOUtils {
 
     private static int failed = 0;
 
-    private static EndAction endAction = null;
+    private static EndAction endAction = () -> {
+        System.err.println("Input stream was terminated. Exiting program.");
+        System.exit(1);
+    };
 
     public static EndAction getEndAction() {
         return endAction;
@@ -46,7 +48,7 @@ public class IOUtils {
      *
      * @return {@link String} containing the user input. Can be an empty String
      */
-    public static String read() throws EOFException {
+    public static String read() {
         String ret = null;
         try {
             ret = getReader().readLine();
@@ -56,11 +58,8 @@ public class IOUtils {
 
         if ((ret == null || ret.trim().isEmpty()) && System.console() == null) {
             failed++;
-            if (failed >= 5)
-                if (endAction != null)
-                    endAction.use();
-                else
-                    throw new EOFException("It appears that our input has reached the end of stream.");
+            if (failed >= 5 && endAction != null) //If there is no end-action, we'll assume things are being handled on the developer's side
+                endAction.use();
         } else
             failed = 0;
 
@@ -75,7 +74,7 @@ public class IOUtils {
      * @param prompt What should we tell the user?
      * @return The string fro the user.
      */
-    public static String promptForString(String prompt) throws EOFException {
+    public static String promptForString(String prompt) {
         System.out.print(prompt.trim() + " ");
         String ret;
         String input = read();
@@ -95,7 +94,7 @@ public class IOUtils {
      * @param max    What is the maximum?
      * @return The parsed int from the user
      */
-    public static int promptForInt(String prompt, int min, int max) throws EOFException {
+    public static int promptForInt(String prompt, int min, int max) {
         int ret;
         try {
             ret = Integer.parseInt(promptForString(prompt));
@@ -117,7 +116,7 @@ public class IOUtils {
      * @param allowed A list of allowed values
      * @return The parsed int from the user
      */
-    public static int promptForInt(String prompt, ArrayList<Integer> allowed) throws EOFException {
+    public static int promptForInt(String prompt, ArrayList<Integer> allowed) {
         int ret;
         try {
             ret = Integer.parseInt(promptForString(prompt));
@@ -156,7 +155,7 @@ public class IOUtils {
      * @param max    The highest acceptable float
      * @return The parsed float value from the user
      */
-    public static float promptForFloat(String prompt, float min, float max) throws EOFException {
+    public static float promptForFloat(String prompt, float min, float max) {
         float ret;
         try {
             ret = Float.parseFloat(promptForString(prompt));
@@ -179,7 +178,7 @@ public class IOUtils {
      * @param prompt What should we tell the user?
      * @return The parsed Date object
      */
-    public static Date promptForDate(String prompt) throws EOFException {
+    public static Date promptForDate(String prompt) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
         boolean isValid = false;
         Date date = null;
@@ -232,7 +231,7 @@ public class IOUtils {
      * @param falseStr A list of acceptable inputs for false, separated by a '.'
      * @return Whether or not they entered true
      */
-    public static boolean promptForBoolean(String prompt, String trueStr, String falseStr) throws EOFException {
+    public static boolean promptForBoolean(String prompt, String trueStr, String falseStr) {
         ArrayList<String> yes = new ArrayList<>(Arrays.asList(trueStr.split("\\.")));
         ArrayList<String> no = new ArrayList<>(Arrays.asList(falseStr.split("\\.")));
 

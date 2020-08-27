@@ -2,7 +2,6 @@ package me.travja.utils.menu;
 
 import me.travja.utils.utils.IOUtils;
 
-import java.io.EOFException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -60,7 +59,7 @@ public class Menu {
     /**
      * Display the menu to the user.
      */
-    public void open() throws EOFException {
+    public void open() {
         open(looping);
     }
 
@@ -69,11 +68,10 @@ public class Menu {
      *
      * @param loop Should this menu loop until quit is selected or display just once?
      */
-    public void open(boolean loop) throws EOFException {
+    public void open(boolean loop) {
         looping = loop;
         openedTimes++;
         int choice;
-        try {
             do {
                 lastMenu = this; //This way, when we fall-through, the choice is already set to 0, but the last menu will be different, keeping it alive.
                 System.out.println();
@@ -91,18 +89,9 @@ public class Menu {
             if (choice == 0 && getParentMenu() != null && !getParentMenu().isLooping()) {
                 getParentMenu().open();
             }
-        } catch (EOFException e) {
-            if (IOUtils.getEndAction() != null) {
-                IOUtils.getEndAction().use();
-            } else {
-                System.err.println("Stream was closed abruptly. Backing out.");
-                throw e;
-            }
-
-        }
     }
 
-    private void runChoice(int choice) throws EOFException {
+    private void runChoice(int choice) {
         MenuAction action = getOptions().get(choice - 1).getAction();
         if (action != null) {
             action.use();
