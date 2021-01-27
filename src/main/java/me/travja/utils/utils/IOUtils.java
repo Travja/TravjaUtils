@@ -173,6 +173,31 @@ public class IOUtils {
     }
 
     /**
+     * Prompt the user for a double
+     *
+     * @param prompt What should we tell the user?
+     * @param min    The lowest acceptable double
+     * @param max    The highest acceptable double
+     * @return The parsed float value from the user
+     */
+    public static double promptForDouble(String prompt, double min, double max) {
+        double ret;
+        try {
+            ret = Double.parseDouble(promptForString(prompt));
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid input. You should enter a number.");
+            ret = promptForDouble(prompt, min, max);
+        }
+
+        if (ret < min || ret > max) {
+            System.out.println("Invalid input. Must be between " + min + " and " + max);
+            ret = promptForDouble(prompt, min, max);
+        }
+
+        return ret;
+    }
+
+    /**
      * Prompt the user for a date with format MM/dd/yyyy
      *
      * @param prompt What should we tell the user?
