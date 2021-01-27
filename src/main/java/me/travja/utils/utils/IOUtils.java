@@ -5,7 +5,6 @@ import me.travja.utils.menu.EndAction;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.io.BufferedReader;
-import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.text.ParseException;
@@ -183,7 +182,24 @@ public class IOUtils {
     public static double promptForDouble(String prompt, double min, double max) {
         double ret;
         try {
-            ret = Double.parseDouble(promptForString(prompt));
+            String in = promptForString(prompt);
+            if (in.contains("/")) {
+                String[] split = in.split("/");
+                double[] nums = new double[split.length];
+                Double running = null;
+                for (int i = 0; i < split.length; i++) {
+                    String sp = split[i];
+                    double temp = Double.parseDouble(sp);
+                    nums[i] = temp;
+                    if (running == null)
+                        running = temp;
+                    else
+                        running = running / temp;
+                }
+                ret = running;
+            } else {
+                ret = Double.parseDouble(in);
+            }
         } catch (NumberFormatException e) {
             System.out.println("Invalid input. You should enter a number.");
             ret = promptForDouble(prompt, min, max);
